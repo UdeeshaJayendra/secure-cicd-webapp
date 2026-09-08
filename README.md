@@ -164,26 +164,6 @@ The project also includes CloudWatch monitoring and ECS deployment circuit break
 
 # Application Features
 
-## Authentication
-
-SecureOps provides user registration and login functionality.
-Passwords are securely hashed using bcrypt before being stored in MongoDB.
-JWT tokens are used to authenticate API requests.
-
----
-
-## File Management
-
-Authenticated users can:
-
-* Upload files
-* View uploaded files
-* Download files
-* Delete files
-
-Supported file types include common documents, images, text files, JSON, CSV, ZIP, DOCX, and XLSX files.
-
-File uploads are limited to **10 MB**.
 
 ### Login Page
 
