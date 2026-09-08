@@ -1,33 +1,56 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_NAME: "secureops-backend"
+
 phases:
+  install:
+    commands:
+      - echo "Installing Trivy..."
+      - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+      - trivy --version
+
   pre_build:
     commands:
       - echo "Installing backend dependencies..."
       - cd backend
       - npm ci
+      - cd ..
+
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
 
   build:
     commands:
       - echo "Running tests..."
-      - npm test -- --if-present
+      - cd backend
+      - npm test --if-present
+      - cd ..
 
       - echo "Building Docker image..."
-      - cd ..
-      - docker build -t secureops-backend:latest ./backend
+      - docker build -t $IMAGE_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION ./backend
 
       - echo "Running Trivy security scan..."
-      - trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 secureops-backend:latest
+      - trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 $IMAGE_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
 
   post_build:
     commands:
-      - echo "Logging in to Amazon ECR..."
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
-
       - echo "Tagging Docker image..."
-      - docker tag secureops-backend:latest $ECR_REPOSITORY_URI:latest
+      - docker tag $IMAGE_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker tag $IMAGE_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION $ECR_REPOSITORY_URI:latest
 
-      - echo "Pushing Docker image..."
+      - echo "Pushing commit-tagged Docker image..."
+      - docker push $ECR_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+
+      - echo "Pushing latest Docker image..."
       - docker push $ECR_REPOSITORY_URI:latest
 
-      - echo "CI/CD build completed successfully."
+      - echo "Creating ECS image definition..."
+      - printf '[{"name":"secureops-backend","imageUri":"%s"}]' "$ECR_REPOSITORY_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION" > imagedefinitions.json
+
+      - echo "Build completed successfully."
+
+artifacts:
+  files:
+    - imagedefinitions.json
