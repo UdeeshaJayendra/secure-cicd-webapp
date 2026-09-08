@@ -213,7 +213,7 @@ File uploads are limited to **10 MB**.
 
 ### Dashboard
 
-<img width="1906" height="907" alt="01-login-page" src="https://github.com/user-attachments/assets/bfb886b9-5a82-4aac-9b6f-cbcd3b9b6d23" />
+<img width="1882" height="917" alt="02-dashboard" src="https://github.com/user-attachments/assets/67f9de74-8a29-4c55-ab3c-af43e451b242" />
 
 
 ### File Management
