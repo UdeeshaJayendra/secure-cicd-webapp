@@ -11,6 +11,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const fileRoutes = require("./routes/fileRoutes");
+const auditRoutes = require("./routes/auditRoutes");
 
 const connectDB = require("./config/db");
 const {
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api/audit", auditRoutes);
 
 app.get("/", (req, res) => {
   res.json({

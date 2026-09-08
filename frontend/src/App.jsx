@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
@@ -10,9 +10,52 @@ import ActivityPanel from "./components/ActivityPanel";
 import Login from "./pages/Login";
 import Files from "./pages/Files";
 import ProtectedRoute from "./components/ProtectedRoute";
+import api from "./services/api";
 
 
 function Dashboard() {
+    const [totalFiles, setTotalFiles] = useState(0);
+    const [storageUsed, setStorageUsed] = useState(0);
+    const [teamMembers, setTeamMembers] = useState(0);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const loadDashboardData = async () => {
+            try {
+                const [filesResponse, usersResponse] = await Promise.all([
+                    api.get("/files"),
+                    api.get("/users")
+                ]);
+
+                const files = filesResponse.data.files || [];
+                const users = usersResponse.data.users || [];
+
+                setTotalFiles(files.length);
+
+                const totalBytes = files.reduce(
+                    (total, file) => total + (file.size || 0),
+                    0
+                );
+
+                const totalMB = totalBytes / (1024 * 1024);
+
+                setStorageUsed(
+                    totalMB < 1024
+                        ? `${totalMB.toFixed(1)} MB`
+                        : `${(totalMB / 1024).toFixed(1)} GB`
+                );
+
+                setTeamMembers(users.length);
+
+            } catch (error) {
+                console.error("Dashboard data error:", error);
+            }
+        };
+
+        loadDashboardData();
+    }, []);
+
     return (
         <div className="app">
 
@@ -35,7 +78,10 @@ function Dashboard() {
                             </p>
                         </div>
 
-                        <button className="upload-button">
+                        <button
+                            className="upload-button"
+                            onClick={() => navigate("/files")}
+                        >
                             + Upload File
                         </button>
                     </div>
@@ -45,30 +91,30 @@ function Dashboard() {
 
                         <StatCard
                             title="Total Files"
-                            value="1,248"
-                            change="12.5%"
-                            icon="□"
+                            value={totalFiles.toLocaleString()}
+                            change="Live"
+                            icon="?"
                         />
 
                         <StatCard
                             title="Storage Used"
-                            value="68.4 GB"
-                            change="8.2%"
-                            icon="▣"
+                            value={storageUsed}
+                            change="Live"
+                            icon="?"
                         />
 
                         <StatCard
                             title="Team Members"
-                            value="24"
-                            change="4.3%"
-                            icon="♙"
+                            value={teamMembers.toLocaleString()}
+                            change="Live"
+                            icon="?"
                         />
 
                         <StatCard
-                            title="Security Score"
-                            value="98%"
-                            change="2.1%"
-                            icon="✓"
+                            title="Security Status"
+                            value="Protected"
+                            change="ClamAV"
+                            icon="?"
                         />
 
                     </div>

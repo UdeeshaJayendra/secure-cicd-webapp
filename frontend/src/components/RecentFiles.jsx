@@ -1,78 +1,159 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 
-const files = [
-  {
-    name: "Project Architecture.pdf",
-    type: "PDF",
-    size: "4.8 MB",
-    modified: "2 minutes ago",
-  },
-  {
-    name: "backend-source.zip",
-    type: "ZIP",
-    size: "18.2 MB",
-    modified: "24 minutes ago",
-  },
-  {
-    name: "database-schema.sql",
-    type: "SQL",
-    size: "2.4 MB",
-    modified: "1 hour ago",
-  },
-  {
-    name: "security-report.pdf",
-    type: "PDF",
-    size: "8.7 MB",
-    modified: "3 hours ago",
-  },
-];
+function formatFileSize(bytes) {
+    if (!bytes) return "0 B";
+
+    const units = ["B", "KB", "MB", "GB"];
+    const index = Math.floor(Math.log(bytes) / Math.log(1024));
+
+    return `${(bytes / Math.pow(1024, index)).toFixed(1)} ${units[index]}`;
+}
+
+function formatTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const seconds = Math.floor((now - date) / 1000);
+
+    if (seconds < 60) {
+        return "Just now";
+    }
+
+    const minutes = Math.floor(seconds / 60);
+
+    if (minutes < 60) {
+        return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+
+    if (hours < 24) {
+        return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    }
+
+    const days = Math.floor(hours / 24);
+
+    return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+function getFileType(mimeType, fileName) {
+    const extension = fileName.split(".").pop()?.toUpperCase();
+
+    if (extension) {
+        return extension;
+    }
+
+    if (mimeType === "application/pdf") {
+        return "PDF";
+    }
+
+    return "FILE";
+}
 
 function RecentFiles() {
-  return (
-    <div className="panel recent-files">
-      <div className="panel-header">
-        <div>
-          <h2>Recent Files</h2>
-          <p>Recently modified files</p>
-        </div>
+    const [files, setFiles] = useState([]);
+    const navigate = useNavigate();
 
-        <button className="view-all">
-          View all →
-        </button>
-      </div>
+    useEffect(() => {
+        const loadFiles = async () => {
+            try {
+                const response = await api.get("/files");
 
-      <div className="files-table">
-        <div className="table-header">
-          <span>Name</span>
-          <span>Type</span>
-          <span>Size</span>
-          <span>Modified</span>
-        </div>
+                setFiles((response.data.files || []).slice(0, 5));
+            } catch (error) {
+                console.error("Recent files error:", error);
+            }
+        };
 
-        {files.map((file) => (
-          <div className="table-row" key={file.name}>
-            <div className="file-name">
-              <div className="file-icon">
-                {file.type === "PDF" ? "P" : "F"}
-              </div>
+        loadFiles();
+    }, []);
 
-              <span>{file.name}</span>
+    return (
+        <div className="panel recent-files">
+
+            <div className="panel-header">
+
+                <div>
+                    <h2>Recent Files</h2>
+                    <p>Recently modified files</p>
+                </div>
+
+                <button
+                    className="view-all"
+                    onClick={() => navigate("/files")}
+                >
+                    View all ?
+                </button>
+
             </div>
 
-            <span className="file-type">
-              {file.type}
-            </span>
 
-            <span>{file.size}</span>
+            <div className="files-table">
 
-            <span className="modified">
-              {file.modified}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+                <div className="table-header">
+                    <span>Name</span>
+                    <span>Type</span>
+                    <span>Size</span>
+                    <span>Modified</span>
+                </div>
+
+
+                {files.length === 0 ? (
+
+                    <div className="table-row">
+                        <span>No files uploaded yet.</span>
+                    </div>
+
+                ) : (
+
+                    files.map((file) => {
+
+                        const type = getFileType(
+                            file.mimeType,
+                            file.originalName
+                        );
+
+                        return (
+                            <div
+                                className="table-row"
+                                key={file._id}
+                            >
+
+                                <div className="file-name">
+
+                                    <div className="file-icon">
+                                        {type === "PDF" ? "P" : "F"}
+                                    </div>
+
+                                    <span>{file.originalName}</span>
+
+                                </div>
+
+                                <span className="file-type">
+                                    {type}
+                                </span>
+
+                                <span>
+                                    {formatFileSize(file.size)}
+                                </span>
+
+                                <span className="modified">
+                                    {formatTimeAgo(file.createdAt)}
+                                </span>
+
+                            </div>
+                        );
+
+                    })
+
+                )}
+
+            </div>
+
+        </div>
+    );
 }
 
 export default RecentFiles;
