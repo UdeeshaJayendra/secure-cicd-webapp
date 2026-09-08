@@ -1,7 +1,6 @@
 # SecureOps — Secure Team File Management Platform
 
 A cloud-native **DevSecOps file management platform** built with React, Node.js, MongoDB, AWS S3, Docker, ClamAV, Trivy, Terraform, Amazon ECS Fargate, Amazon ECR, AWS CodeBuild, AWS CodePipeline, CloudWatch, and AWS Secrets Manager.
-
 SecureOps demonstrates how application development, security scanning, infrastructure automation, CI/CD, monitoring, and deployment rollback can be integrated into a single secure workflow.
 
 ---
@@ -10,13 +9,9 @@ SecureOps demonstrates how application development, security scanning, infrastru
 # Overview
 
 **SecureOps** is a secure team file management platform designed to demonstrate practical **DevSecOps and cloud engineering practices**.
-
 Users can authenticate, upload files, download files, delete files, manage team roles, and view activity logs.
-
 Uploaded files are scanned using **ClamAV** before being stored in Amazon S3. Container images are scanned using **Trivy** during the CI/CD process before being deployed to Amazon ECS Fargate.
-
 The infrastructure is provisioned using **Terraform**, while AWS CodePipeline automates the deployment workflow.
-
 The project also includes CloudWatch monitoring and ECS deployment circuit breaker functionality with automatic rollback.
 
 ### Core workflow
@@ -172,25 +167,8 @@ The project also includes CloudWatch monitoring and ECS deployment circuit break
 ## Authentication
 
 SecureOps provides user registration and login functionality.
-
 Passwords are securely hashed using bcrypt before being stored in MongoDB.
-
 JWT tokens are used to authenticate API requests.
-
-
-## Role-Based Access Control
-
-The platform supports three roles:
-
-```text
-Admin
-Manager
-Member
-```
-
-Administrators can manage team members, roles, and account status.
-
-The backend verifies authentication and authorization through middleware before protected operations are executed.
 
 ---
 
