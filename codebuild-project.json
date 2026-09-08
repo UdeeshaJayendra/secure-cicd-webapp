@@ -1,0 +1,24 @@
+{
+  "name": "secureops-backend-build",
+  "source": {
+    "type": "CODEPIPELINE",
+    "buildspec": "buildspec.yml"
+  },
+  "artifacts": {
+    "type": "CODEPIPELINE"
+  },
+  "environment": {
+    "type": "LINUX_CONTAINER",
+    "image": "aws/codebuild/standard:7.0",
+    "computeType": "BUILD_GENERAL1_SMALL",
+    "privilegedMode": true,
+    "environmentVariables": [
+      {
+        "name": "ECR_REPOSITORY_URI",
+        "value": "216453078762.dkr.ecr.ap-south-1.amazonaws.com/secureops-backend",
+        "type": "PLAINTEXT"
+      }
+    ]
+  },
+  "serviceRole": "arn:aws:iam::216453078762:role/secureops-codebuild-role"
+}

@@ -1,0 +1,83 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ArtifactBucketAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:PutObject",
+        "s3:GetBucketVersioning",
+        "s3:ListBucket",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::secureops-codepipeline-artifacts-216453078762",
+        "arn:aws:s3:::secureops-codepipeline-artifacts-216453078762/*"
+      ]
+    },
+    {
+      "Sid": "CodeBuildAccess",
+      "Effect": "Allow",
+      "Action": [
+        "codebuild:StartBuild",
+        "codebuild:BatchGetBuilds"
+      ],
+      "Resource": "arn:aws:codebuild:ap-south-1:216453078762:project/secureops-backend-build"
+    },
+    {
+      "Sid": "ECSDeployAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition",
+        "ecs:RegisterTaskDefinition",
+        "ecs:UpdateService"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ECSTagResource",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:TagResource"
+      ],
+      "Resource": "arn:aws:ecs:ap-south-1:216453078762:task-definition/secureops-backend:*",
+      "Condition": {
+        "StringEquals": {
+          "ecs:CreateAction": [
+            "RegisterTaskDefinition"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "PassECSTaskRoles",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::216453078762:role/secureops-ecs-execution-role",
+        "arn:aws:iam::216453078762:role/secureops-ecs-task-role"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": [
+            "ecs.amazonaws.com",
+            "ecs-tasks.amazonaws.com"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "GitHubConnectionAccess",
+      "Effect": "Allow",
+      "Action": [
+        "codeconnections:UseConnection"
+      ],
+      "Resource": "arn:aws:codeconnections:ap-south-1:216453078762:connection/0cc175a9-8bcf-4786-854c-6da86c8d97b2"
+    }
+  ]
+}
