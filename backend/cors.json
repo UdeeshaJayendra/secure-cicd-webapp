@@ -1,0 +1,21 @@
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": [
+        "http://localhost:5173"
+      ],
+      "AllowedMethods": [
+        "GET"
+      ],
+      "AllowedHeaders": [
+        "*"
+      ],
+      "ExposeHeaders": [
+        "Content-Length",
+        "Content-Type",
+        "Content-Disposition"
+      ],
+      "MaxAgeSeconds": 3000
+    }
+  ]
+}

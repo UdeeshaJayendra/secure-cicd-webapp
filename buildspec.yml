@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Installing backend dependencies..."
+      - cd backend
+      - npm ci
+
+  build:
+    commands:
+      - echo "Running tests..."
+      - npm test -- --if-present
+
+      - echo "Building Docker image..."
+      - cd ..
+      - docker build -t secureops-backend:latest ./backend
+
+      - echo "Running Trivy security scan..."
+      - trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 secureops-backend:latest
+
+  post_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
+
+      - echo "Tagging Docker image..."
+      - docker tag secureops-backend:latest $ECR_REPOSITORY_URI:latest
+
+      - echo "Pushing Docker image..."
+      - docker push $ECR_REPOSITORY_URI:latest
+
+      - echo "CI/CD build completed successfully."
