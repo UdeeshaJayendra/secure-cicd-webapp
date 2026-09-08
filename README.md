@@ -528,12 +528,7 @@ SecureOps uses the ECS deployment circuit breaker with automatic rollback.
 
 The configuration was verified using AWS CLI:
 
-```json
-{
-  "enable": true,
-  "rollback": true
-}
-```
+
 <img width="1603" height="441" alt="33-ecs-rollback-configuration" src="https://github.com/user-attachments/assets/039456fa-9383-40cc-86ca-2187f65352af" />
 
 ---
