@@ -74,6 +74,8 @@ The project also includes CloudWatch monitoring and ECS deployment circuit break
 # Architecture
 
 ## High-Level Architecture
+<img width="1408" height="768" alt="7" src="https://github.com/user-attachments/assets/dedefd99-c0be-45cd-8357-f3af7acfa4f6" />
+
 
 ```text
                          ┌──────────────────────┐
