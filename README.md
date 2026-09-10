@@ -14,12 +14,6 @@ Uploaded files are scanned using **ClamAV** before being stored in Amazon S3. Co
 The infrastructure is provisioned using **Terraform**, while AWS CodePipeline automates the deployment workflow.
 The project also includes CloudWatch monitoring and ECS deployment circuit breaker functionality with automatic rollback.
 
-### Core workflow
-
-<img width="1408" height="768" alt="architecture" src="https://github.com/user-attachments/assets/83c9e3b2-393b-4768-8538-30fe49c79805" />
-
----
-
 # Key Features
 
 ## Application
