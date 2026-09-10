@@ -3,9 +3,6 @@
 A cloud-native **DevSecOps file management platform** built with React, Node.js, MongoDB, AWS S3, Docker, ClamAV, Trivy, Terraform, Amazon ECS Fargate, Amazon ECR, AWS CodeBuild, AWS CodePipeline, CloudWatch, and AWS Secrets Manager.
 SecureOps demonstrates how application development, security scanning, infrastructure automation, CI/CD, monitoring, and deployment rollback can be integrated into a single secure workflow.
 
----
----
-
 # Overview
 
 **SecureOps** is a secure team file management platform designed to demonstrate practical **DevSecOps and cloud engineering practices**.
