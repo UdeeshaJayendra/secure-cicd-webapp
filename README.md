@@ -11,6 +11,38 @@ Uploaded files are scanned using **ClamAV** before being stored in Amazon S3. Co
 The infrastructure is provisioned using **Terraform**, while AWS CodePipeline automates the deployment workflow.
 The project also includes CloudWatch monitoring and ECS deployment circuit breaker functionality with automatic rollback.
 
+
+# Architecture
+
+## High-Level Architecture
+<img width="1408" height="768" alt="7" src="https://github.com/user-attachments/assets/dedefd99-c0be-45cd-8357-f3af7acfa4f6" />
+
+---
+
+# Technology Stack
+
+| Category               | Technologies                    |
+| ---------------------- | ------------------------------- |
+| Frontend               | React, JavaScript, CSS          |
+| Backend                | Node.js, Express.js             |
+| Database               | MongoDB                         |
+| Authentication         | JWT, bcrypt                     |
+| File Storage           | Amazon S3                       |
+| Malware Scanning       | ClamAV                          |
+| Containerization       | Docker                          |
+| Vulnerability Scanning | Trivy                           |
+| Container Registry     | Amazon ECR                      |
+| Container Platform     | Amazon ECS Fargate              |
+| Infrastructure as Code | Terraform                       |
+| CI/CD                  | AWS CodePipeline, AWS CodeBuild |
+| Source Control         | GitHub                          |
+| Secrets                | AWS Secrets Manager             |
+| Monitoring             | Amazon CloudWatch               |
+| Cloud Platform         | AWS                             |
+| Region                 | ap-south-1 (Mumbai)             |
+
+---
+
 # Key Features
 
 ## Application
@@ -60,38 +92,6 @@ The project also includes CloudWatch monitoring and ECS deployment circuit break
 * Automatic deployment rollback
 * Infrastructure as Code using Terraform
 
----
-
-# Architecture
-
-## High-Level Architecture
-<img width="1408" height="768" alt="7" src="https://github.com/user-attachments/assets/dedefd99-c0be-45cd-8357-f3af7acfa4f6" />
-
----
-
-# Technology Stack
-
-| Category               | Technologies                    |
-| ---------------------- | ------------------------------- |
-| Frontend               | React, JavaScript, CSS          |
-| Backend                | Node.js, Express.js             |
-| Database               | MongoDB                         |
-| Authentication         | JWT, bcrypt                     |
-| File Storage           | Amazon S3                       |
-| Malware Scanning       | ClamAV                          |
-| Containerization       | Docker                          |
-| Vulnerability Scanning | Trivy                           |
-| Container Registry     | Amazon ECR                      |
-| Container Platform     | Amazon ECS Fargate              |
-| Infrastructure as Code | Terraform                       |
-| CI/CD                  | AWS CodePipeline, AWS CodeBuild |
-| Source Control         | GitHub                          |
-| Secrets                | AWS Secrets Manager             |
-| Monitoring             | Amazon CloudWatch               |
-| Cloud Platform         | AWS                             |
-| Region                 | ap-south-1 (Mumbai)             |
-
----
 
 # Application Features
 
